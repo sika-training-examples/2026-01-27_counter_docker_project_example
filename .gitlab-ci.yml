@@ -58,6 +58,7 @@ deploy:
     TRAEFIK_NAME: "counter-$CI_COMMIT_REF_SLUG"
     HOST: "counter-$CI_COMMIT_REF_SLUG.docker.sikademo.com"
   script:
+    - mkdir -p ~/.ssh
     - echo $SSH_PRIVATE_KEY | base64 -d > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
     - ssh-keyscan -H docker.sikademo.com >> ~/.ssh/known_hosts
