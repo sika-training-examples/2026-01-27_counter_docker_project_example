@@ -18,3 +18,4 @@
 *.local.json
 *.local.txt
 Makefile.local.mk
+.env
