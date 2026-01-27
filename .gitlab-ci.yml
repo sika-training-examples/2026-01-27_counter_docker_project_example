@@ -8,6 +8,7 @@ variables:
 
 stages:
   - build
+  - test
 
 before_script:
   - echo "$CI_REGISTRY_PASSWORD" | docker login  "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
@@ -21,3 +22,30 @@ build:
     - docker compose build --pull --progress=plain
     - docker compose push
 
+.test:
+  stage: test
+  variables:
+    COMPOSE_FILE: "compose.yml:compose.tests.yml"
+    COMPOSE_PROJECT_NAME: "ci_$CI_JOB_ID"
+  after_script:
+    - docker compose down --remove-orphans
+
+test-tests:
+  extends: .test
+  script:
+    - docker compose run tests
+
+test-ab-be-api:
+  extends: .test
+  script:
+    - docker compose run ab-be-api
+
+test-ab-be:
+  extends: .test
+  script:
+    - docker compose run ab-be
+
+test-ab-fe:
+  extends: .test
+  script:
+    - docker compose run ab-fe
