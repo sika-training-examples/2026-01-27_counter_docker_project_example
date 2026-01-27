@@ -9,6 +9,7 @@ variables:
 stages:
   - build
   - test
+  - deploy
 
 before_script:
   - echo "$CI_REGISTRY_PASSWORD" | docker login  "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
@@ -49,3 +50,19 @@ test-ab-fe:
   extends: .test
   script:
     - docker compose run ab-fe
+
+deploy:
+  stage: deploy
+  variables:
+    DOCKER_HOST: "ssh://root@docker.sikademo.com"
+    TRAEFIK_NAME: "counter-$CI_COMMIT_REF_SLUG"
+    HOST: "counter-$CI_COMMIT_REF_SLUG.docker.sikademo.com"
+  script:
+    - echo $SSH_PRIVATE_KEY | base64 -d > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan -H docker.sikademo.com >> ~/.ssh/known_hosts
+    - make use-traefik
+    - make up
+  environment:
+    name: $CI_COMMIT_REF_SLUG
+    url: "https://$HOST"
