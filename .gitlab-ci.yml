@@ -25,6 +25,8 @@ build:
 
 .test:
   stage: test
+  except:
+    - master
   variables:
     COMPOSE_FILE: "compose.yml:compose.tests.yml"
     COMPOSE_PROJECT_NAME: "ci_$CI_JOB_ID"
