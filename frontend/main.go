@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	os.Setenv("FONT_COLOR", "blue")
 	os.Setenv("BACKGROUND_COLOR", "lightblue")
 	server.Server()
 }
