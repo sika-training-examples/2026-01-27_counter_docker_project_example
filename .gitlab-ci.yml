@@ -15,6 +15,7 @@ before_script:
 build:
   stage: build
   variables:
+    DOCKER_BUILDKIT: "1"
     COMPOSE_FILE: "compose.yml:compose.caddy.yml:compose.tests.yml"
   script:
     - docker compose build --pull --progress=plain
