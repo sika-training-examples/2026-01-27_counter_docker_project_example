@@ -68,3 +68,19 @@ deploy:
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: "https://$HOST"
+    on_stop: deploy_stop
+
+deploy_stop:
+  stage: deploy
+  when: manual
+  variables:
+    DOCKER_HOST: "ssh://root@docker.sikademo.com"
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | base64 -d > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan -H docker.sikademo.com >> ~/.ssh/known_hosts
+    - docker ps -f label=com.docker.compose.project=counter-$CI_COMMIT_REF_SLUG --format "{{.ID}}" | xargs -r docker rm -f
+  environment:
+    name: $CI_COMMIT_REF_SLUG
+    action: stop
