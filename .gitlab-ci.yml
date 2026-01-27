@@ -75,6 +75,7 @@ deploy_stop:
   when: manual
   variables:
     DOCKER_HOST: "ssh://root@docker.sikademo.com"
+    GIT_STRATEGY: none
   script:
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" | base64 -d > ~/.ssh/id_ed25519
