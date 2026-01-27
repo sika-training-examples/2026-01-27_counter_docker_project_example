@@ -34,21 +34,25 @@ build:
 test-tests:
   extends: .test
   script:
+    - docker compose pull
     - docker compose run tests
 
 test-ab-be-api:
   extends: .test
   script:
+    - docker compose pull
     - docker compose run ab-be-api
 
 test-ab-be:
   extends: .test
   script:
+    - docker compose pull
     - docker compose run ab-be
 
 test-ab-fe:
   extends: .test
   script:
+    - docker compose pull
     - docker compose run ab-fe
 
 deploy:
