@@ -13,7 +13,7 @@ services:
 
   backend:
     build: ./backend
-    image: ttl.sh/counter/backend
+    image: ${IMAGE_BACKEND?}
     depends_on:
       mongodb:
         condition: service_healthy
@@ -30,7 +30,7 @@ services:
 
   frontend:
     build: ./frontend
-    image: ttl.sh/counter/frontend
+    image: ${IMAGE_FRONTEND?}
     depends_on:
       backend:
         condition: service_healthy

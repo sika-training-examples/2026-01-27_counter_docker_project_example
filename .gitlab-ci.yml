@@ -1,0 +1,22 @@
+image: ghcr.io/sikalabs/ci
+
+variables:
+  IMAGE_BACKEND: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_REF_SLUG
+  IMAGE_FRONTEND: $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_REF_SLUG
+  IMAGE_CADDY: $CI_REGISTRY_IMAGE/caddy:$CI_COMMIT_REF_SLUG
+  IMAGE_TESTS: $CI_REGISTRY_IMAGE/tests:$CI_COMMIT_REF_SLUG
+
+stages:
+  - build
+
+before_script:
+  - echo "$CI_REGISTRY_PASSWORD" | docker login  "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+
+build:
+  stage: build
+  variables:
+    COMPOSE_FILE: "compose.yml:compose.caddy.yml:compose.tests.yml"
+  script:
+    - docker compose build --pull --progress=plain
+    - docker compose push
+

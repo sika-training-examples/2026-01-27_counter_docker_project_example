@@ -12,6 +12,7 @@ services:
   tests:
     <<: *base
     build: ./tests
+    image: ${IMAGE_TESTS?}
 
   ab-be-api:
     <<: *base
